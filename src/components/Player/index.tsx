@@ -1,13 +1,19 @@
 import format from "date-fns/format";
 import ptBR from "date-fns/locale/pt-BR";
 import styles from "./styles.module.scss";
+import { useContext } from "react";
+import { PlayerContext } from "../../contexts/PlayerContext";
 
 function Player() {
+  const { episodeList, currentEpisodeIndex } = useContext(PlayerContext);
+
+  const episode = episodeList[currentEpisodeIndex];
+
   return (
     <div className={styles.playerContainer}>
       <header>
         <img src="/playing.svg" alt="Tocando agora" />
-        <strong>Tocando agora</strong>
+        <strong>Tocando agora {episode?.title}</strong>
       </header>
 
       <div className={styles.emptyPlayer}>
