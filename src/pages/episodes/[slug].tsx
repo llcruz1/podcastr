@@ -4,9 +4,8 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "../../services/api";
-import { format, parseISO } from "date-fns";
-import ptBR from "date-fns/locale/pt-BR";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
+import { convertMillisecondsToDateString } from "../../utils/convertMillisecondsToDateString";
 import styles from "./episode.module.scss";
 import { usePlayer } from "../../contexts/PlayerContext";
 
@@ -103,7 +102,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     title: data.title,
     thumbnail: data.thumbnail,
     members: publisher,
-    publishedAt: new Date(data.pub_date_ms).toLocaleDateString(),
+    publishedAt: convertMillisecondsToDateString(data.pub_date_ms),
     duration: Number(data.audio_length_sec),
     durationAsString: convertDurationToTimeString(Number(data.audio_length_sec)),
     description: data.description,

@@ -3,10 +3,9 @@ import { GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
-import { format, parseISO } from "date-fns";
-import ptBR from "date-fns/locale/pt-BR";
 import { api } from "../services/api";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
+import { convertMillisecondsToDateString } from "../utils/convertMillisecondsToDateString";
 import styles from "./home.module.scss";
 import { usePlayer } from "../contexts/PlayerContext";
 
@@ -134,7 +133,7 @@ export const getStaticProps: GetStaticProps = async () => {
       title: episode.title,
       thumbnail: episode.thumbnail,
       members: publisher, // Listen API does not provide host and guests per episode, so I just used the podcast's publisher for this field.
-      publishedAt: new Date(episode.pub_date_ms).toLocaleDateString(),
+      publishedAt: convertMillisecondsToDateString(episode.pub_date_ms),
       duration: Number(episode.audio_length_sec),
       durationAsString: convertDurationToTimeString(Number(episode.audio_length_sec)),
       description: episode.description,
