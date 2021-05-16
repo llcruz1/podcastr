@@ -2134,6 +2134,13 @@ pnp-webpack-plugin@1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
+podcast-api@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/podcast-api/-/podcast-api-1.0.8.tgz#3894012d06008739975010cf9f091e5ea0d11fbc"
+  integrity sha512-a4EEd87gKb4tircqqTpeONJf7mJfMY2pf5on4zk/cUsIyTUOfcxyZb52xlvW8sZdMM55zAnu9f9t5V6TW0F5qg==
+  dependencies:
+    axios "^0.21.1"
+
 postcss@8.1.7:
   version "8.1.7"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.1.7.tgz#ff6a82691bd861f3354fd9b17b2332f88171233f"

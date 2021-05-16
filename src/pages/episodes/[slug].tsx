@@ -40,12 +40,7 @@ export default function Episode({ episode }: EpisodeProps) {
             <img src="/arrow-left.svg" alt="Voltar" />
           </button>
         </Link>
-        <Image
-          width={700}
-          height={160}
-          src={episode.thumbnail}
-          objectFit="cover"
-        />
+        <Image width={700} height={160} src={episode.thumbnail} objectFit="cover" />
         <button type="button" onClick={() => play(episode)}>
           <img src="/play.svg" alt="Tocar episódio" />
         </button>
@@ -68,15 +63,18 @@ export default function Episode({ episode }: EpisodeProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   //Generating the last 2 published episodes pages as static pages.
-  const { data } = await api.get("episodes", {
+  const { data } = await api.get("podcasts/618f72ea42f94904bd29cfc1a6edc8b1", {
+    headers: {
+      "X-ListenAPI-Key": "5b7d13edb5a74e9d95a0aaba9401471c",
+    },
     params: {
       _limit: 2,
-      _sort: "published_at",
+      sort: "recent_first",
       _order: "desc",
     },
   });
 
-  const paths = data.map((episode) => {
+  const paths = data["episodes"].map((episode) => {
     return {
       params: {
         slug: episode.id,
@@ -92,20 +90,24 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { slug } = ctx.params;
-  const { data } = await api.get(`/episodes/${slug}`);
+  const { data } = await api.get(`/episodes/${slug}`, {
+    headers: {
+      "X-ListenAPI-Key": `${process.env.apiKey}`,
+    },
+  });
+
+  const publisher = data.podcast.publisher;
 
   const episode = {
     id: data.id,
     title: data.title,
     thumbnail: data.thumbnail,
-    members: data.members,
-    publishedAt: format(parseISO(data.published_at), "d MMM yy", {
-      locale: ptBR,
-    }),
-    duration: Number(data.file.duration),
-    durationAsString: convertDurationToTimeString(Number(data.file.duration)),
+    members: publisher,
+    publishedAt: new Date(data.pub_date_ms).toLocaleDateString(),
+    duration: Number(data.audio_length_sec),
+    durationAsString: convertDurationToTimeString(Number(data.audio_length_sec)),
     description: data.description,
-    url: data.file.url,
+    url: data.audio,
   };
 
   return {

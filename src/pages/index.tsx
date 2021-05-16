@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,10 +58,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <span>{episode.durationAsString}</span>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => playList(episodeList, index)}
-                >
+                <button type="button" onClick={() => playList(episodeList, index)}>
                   <img src="/play-green.svg" alt="Tocar episódio" />
                 </button>
               </li>
@@ -103,9 +101,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <td>
                     <button
                       type="button"
-                      onClick={() =>
-                        playList(episodeList, index + latestEpisodes.length)
-                      }
+                      onClick={() => playList(episodeList, index + latestEpisodes.length)}
                     >
                       <img src="/play-green.svg" alt="Tocar episódio" />
                     </button>
@@ -121,25 +117,28 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await api.get("episodes", {
-    params: { _limit: 12, _sort: "published_at", _order: "desc" },
+  const { data } = await api.get("podcasts/618f72ea42f94904bd29cfc1a6edc8b1", {
+    headers: {
+      "X-ListenAPI-Key": `${process.env.apiKey}`,
+    },
+    params: {
+      sort: "recent_first",
+    },
   });
 
-  const episodes = data.map((episode) => {
+  const publisher = data.publisher;
+
+  const episodes = data["episodes"].map((episode) => {
     return {
       id: episode.id,
       title: episode.title,
       thumbnail: episode.thumbnail,
-      members: episode.members,
-      publishedAt: format(parseISO(episode.published_at), "d MMM yy", {
-        locale: ptBR,
-      }),
-      duration: Number(episode.file.duration),
-      durationAsString: convertDurationToTimeString(
-        Number(episode.file.duration)
-      ),
+      members: publisher, // Listen API does not provide host and guests per episode, so I just used the podcast's publisher for this field.
+      publishedAt: new Date(episode.pub_date_ms).toLocaleDateString(),
+      duration: Number(episode.audio_length_sec),
+      durationAsString: convertDurationToTimeString(Number(episode.audio_length_sec)),
       description: episode.description,
-      url: episode.file.url,
+      url: episode.audio,
     };
   });
 
