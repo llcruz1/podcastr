@@ -64,7 +64,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   //Generating the last 2 published episodes pages as static pages.
   const { data } = await api.get("podcasts/618f72ea42f94904bd29cfc1a6edc8b1", {
     headers: {
-      "X-ListenAPI-Key": "5b7d13edb5a74e9d95a0aaba9401471c",
+      "X-ListenAPI-Key": `${process.env.API_KEY}`,
     },
     params: {
       _limit: 2,
@@ -91,7 +91,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const { slug } = ctx.params;
   const { data } = await api.get(`/episodes/${slug}`, {
     headers: {
-      "X-ListenAPI-Key": `${process.env.apiKey}`,
+      "X-ListenAPI-Key": `${process.env.API_KEY}`,
     },
   });
 

@@ -118,7 +118,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 export const getStaticProps: GetStaticProps = async () => {
   const { data } = await api.get("podcasts/618f72ea42f94904bd29cfc1a6edc8b1", {
     headers: {
-      "X-ListenAPI-Key": `${process.env.apiKey}`,
+      "X-ListenAPI-Key": `${process.env.API_KEY}`,
     },
     params: {
       sort: "recent_first",
